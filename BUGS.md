@@ -70,3 +70,14 @@ In `src/components/BalancesPanel.jsx`, I swapped the condition checks so `bal > 
 
 **What I changed:**
 I refactored `App.jsx`, `ExpenseList.jsx`, and `store.js` to target expenses by their unique `expense.id` rather than their array index.
+
+---
+
+## Bug 7
+
+**How to reproduce:** Add an expense, then refresh the page.
+
+**What is wrong:** When the app saves data to `localStorage` and loads it back (`loadState`), it simply runs `JSON.parse(raw)`. Because JSON doesn't support Date objects, they are retrieved as raw strings, corrupting the dates.
+
+**What I changed:**
+In `src/state/store.js`, I updated `loadState` to run `hydrate(JSON.parse(raw))` so the date strings are properly converted back into actual `Date` objects when loaded from local storage.
