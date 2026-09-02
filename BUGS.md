@@ -15,6 +15,7 @@ Keep this file in the repo and **commit it** with your fixes.
 **What I changed:**
 In `src/components/ExpenseList.jsx`, modified the sort function from `dateValue(a.date) - dateValue(b.date)` to `dateValue(b.date) - dateValue(a.date)` so that expenses are sorted by date in descending order.
 Additionally, in `src/lib/format.js`, fixed `dateValue()` to return a number (`new Date(date).getTime()`) instead of the raw date string, because string subtraction resulted in `NaN` which broke the sorting logic.
+
 ---
 
 ## Bug 2
@@ -36,3 +37,14 @@ In `src/App.jsx` line 36, I modified the filter logic to cast the expense `paidB
 
 **What I changed:**
 In `src/lib/balances.js`, I removed the `if (!(exp.paidBy in shares) && !(String(exp.paidBy) in shares))` block that incorrectly deducted `exp.amount / n` from the payer's balance when they weren't part of the split.
+
+---
+
+## Bug 4
+
+**How to reproduce:** Add an expense of $100 and split it equally between 3 people. 
+
+**What is wrong:** The shares calculated will be 33.33, 33.33, and 33.33, which sum to $99.99 instead of $100. This happens due to missing cents when dividing numbers that do not divide evenly (like $100 / 3). The missing $0.01 is lost in rounding.
+
+**What I changed:**
+In `src/lib/money.js`, I updated `splitEqual` and `splitByPercent` to calculate shares in cents. For remainders that do not divide equally, the extra cents are distributed one by one to the users so that the sum of the shares exactly equals the total amount.
