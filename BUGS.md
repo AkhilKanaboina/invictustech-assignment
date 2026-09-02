@@ -59,3 +59,14 @@ In `src/lib/money.js`, I updated `splitEqual` and `splitByPercent` to calculate 
 
 **What I changed:**
 In `src/components/BalancesPanel.jsx`, I swapped the condition checks so `bal > 0.005` correctly displays "is owed" and `bal < -0.005` displays "owes".
+
+---
+
+## Bug 6
+
+**How to reproduce:** In the UI, add multiple expenses, and then click "Delete" or change the amount on one of the expenses in the middle of the list.
+
+**What is wrong:** The app deletes or updates the wrong expense! This happens because `ExpenseList.jsx` passes the array `index` of the filtered and sorted list, but the reducer in `store.js` assumes this `index` corresponds to the full, raw, unsorted array of expenses. 
+
+**What I changed:**
+I refactored `App.jsx`, `ExpenseList.jsx`, and `store.js` to target expenses by their unique `expense.id` rather than their array index.
