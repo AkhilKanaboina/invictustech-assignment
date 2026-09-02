@@ -27,3 +27,12 @@ Additionally, in `src/lib/format.js`, fixed `dateValue()` to return a number (`n
 In `src/App.jsx` line 36, I modified the filter logic to cast the expense `paidBy` value to a string before comparing: `if (paidBy !== "" && String(e.paidBy) !== paidBy) return false;`.
 
 ---
+
+## Bug 3
+
+**How to reproduce:** Add an expense where one person pays, but splits it with a group of people that *excludes* the payer. The balances will be incorrect.
+
+**What is wrong:** The app incorrectly decreases the payer's balance when they are not included in the split. This results in the payer losing money rather than just gaining a credit for the amount they paid for others.
+
+**What I changed:**
+In `src/lib/balances.js`, I removed the `if (!(exp.paidBy in shares) && !(String(exp.paidBy) in shares))` block that incorrectly deducted `exp.amount / n` from the payer's balance when they weren't part of the split.
