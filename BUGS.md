@@ -48,3 +48,14 @@ In `src/lib/balances.js`, I removed the `if (!(exp.paidBy in shares) && !(String
 
 **What I changed:**
 In `src/lib/money.js`, I updated `splitEqual` and `splitByPercent` to calculate shares in cents. For remainders that do not divide equally, the extra cents are distributed one by one to the users so that the sum of the shares exactly equals the total amount.
+
+---
+
+## Bug 5
+
+**How to reproduce:** Add an expense and look at the "Balances" section in the right sidebar. Notice the labels next to people's balances when they are positive or negative.
+
+**What is wrong:** When someone's calculated balance is positive (meaning they paid more than their fair share and should be getting money back), the UI labels it as "owes". If their balance is negative (meaning they owe money), the UI says they are "is owed". The labels are swapped.
+
+**What I changed:**
+In `src/components/BalancesPanel.jsx`, I swapped the condition checks so `bal > 0.005` correctly displays "is owed" and `bal < -0.005` displays "owes".
